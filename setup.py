@@ -29,6 +29,15 @@ def yes_no_prompt(prompt):
         print("❌Пожалуйста, введите 'y' или 'n'.")
 
 def install_dependencies():
+    print("\n🔄️Проверяю зависимости...")
+    
+    # Создаем requirements.txt если его нет
+    if not os.path.exists('requirements.txt'):
+        with open('requirements.txt', 'w', encoding='utf-8') as f:
+            f.write('discord.py>=2.3.0\n')
+            f.write('python-dotenv>=1.0.0\n')
+            f.write('requests>=2.31.0\n')
+    
     while True:
         print("\n🔄️Устанавливаю зависимости...")
         try:
@@ -40,8 +49,27 @@ def install_dependencies():
             if not yes_no_prompt("Повторить попытку? (y/n): "):
                 return False
 
+def check_requirements():
+    """Проверяет наличие необходимых файлов"""
+    required_files = ['main.py', 'requirements.txt']
+    missing_files = []
+    
+    for file in required_files:
+        if not os.path.exists(file):
+            missing_files.append(file)
+    
+    if missing_files:
+        print(f"⚠️Отсутствуют необходимые файлы: {', '.join(missing_files)}")
+        return False
+    return True
+
 def install():
     clear_screen()
+    
+    # Проверка необходимых файлов
+    if not check_requirements():
+        print("❌Установка не может быть продолжена.")
+        return
     
     # Шаг 1: Проверка .env файла
     if os.path.exists('.env'):
@@ -86,6 +114,13 @@ def install():
     # Шаг 5: Ввод ID администратора
     bot_owner_id = get_input("\n👑Введите ID администратора: ")
     
+    # Шаг 6: Создание необходимых файлов
+    if not os.path.exists('modules.txt'):
+        with open('modules.txt', 'w', encoding='utf-8') as f:
+            f.write('# Список загруженных модулей\n')
+            f.write('# Добавьте пути к модулям, по одному на строку\n')
+            f.write('# Пример: example_module.py\n\n')
+    
     # Запись всех данных в .env
     with open('.env', 'w', encoding='utf-8') as f:
         f.write(f"DISCORD_TOKEN={discord_token}\n")
@@ -93,13 +128,24 @@ def install():
         f.write(f"BOT_OWNER_ID={bot_owner_id}\n")
         f.write("# Написано Scream [dev]\n")
     
-    # Шаг 6: Установка зависимостей
+    # Шаг 7: Установка зависимостей
     if not install_dependencies():
         print("❌Установка зависимостей не удалась. Некоторые функции бота могут не работать.")
         return
     
-    # Шаг 7: Завершение установки
-    print("\n✅Discord Modules Bot успешно установлен. Все введённые данные можно изменить в файле .env")
+    # Шаг 8: Завершение установки
+    print("\n" + "="*50)
+    print("✅ Discord Modules Bot успешно установлен!")
+    print("="*50)
+    print("\n📁 Созданные файлы:")
+    print("  • .env - настройки бота")
+    print("  • modules.txt - список модулей")
+    print("  • requirements.txt - зависимости")
+    print("\n🚀 Для запуска бота выполните:")
+    print("  python main.py")
+    print("\n🛠️ Все введённые данные можно изменить в файле .env")
+    print("\n💡 Создайте свой первый модуль в папке с ботом и добавьте его командой:")
+    print("  !add ваш_модуль.py")
 
 if __name__ == "__main__":
     install()
