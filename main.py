@@ -1,3 +1,5 @@
+#26-1-1
+
 import os
 import discord
 from discord.ext import commands
