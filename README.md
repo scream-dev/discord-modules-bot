@@ -1,3 +1,4 @@
+# __The project will be completely redesigned to meet modern realities in the near future. It is outdated in terms of its architecture__
 # 🚀 DMB - Discord Modules Bot  
 ## Позволяет вам быстро загружать модули для вашего Discord бота
 
